@@ -1,1 +1,24 @@
+bay (entity)
+unique bay number (key)
+- bay location (attribute)
+- height of bay (attribute)
+- number of bins (attribute)
+- fork lift (attribute)
 
+fork lift (entty)
+unique equipment number (key)
+-maximum carrying weight (attribute)
+-petrol driven or electric (attribute)
+
+bin (entity)
+bin number (key)
+- size of bin (attribute)
+- maximum loaded weight (attribute)
+- number of items (attribute)
+
+item (entity)
+unique number (key)
+- date taken to the warehouse (attribute)
+- item weight (attribute)
+- date item is put in bin (attribute
+- bin number (attribute)
