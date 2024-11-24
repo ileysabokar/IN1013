@@ -24,8 +24,7 @@ FROM restStaff
 WHERE staff_no IN (
     SELECT DISTINCT headwaiter
     FROM restStaff
-    WHERE headwaiter IS NOT NULL
-);
+    WHERE headwaiter IS NOT NULL);
 
 -- 5
 
