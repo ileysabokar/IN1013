@@ -1,46 +1,55 @@
 -- 1
 
- SELECT s.first_name, s.surname, b.bill_date, COUNT(b.bill_no) AS number_of_bills
-     FROM restBill b
-     JOIN restStaff s ON b.waiter_no = s.staff_no
-     GROUP BY s.first_name, s.surname, b.bill_date
-     HAVING COUNT(b.bill_no) >= 2;
+SELECT restStaff.first_name, restStaff.surname
+    FROM restStaff
+    JOIN restBill ON restStaff.staff_no = restBill.waiter_no
+    WHERE restBill.cust_name = 'Tanya Singh';
 
 -- 2
 
-SELECT r.room_name, COUNT(*) AS number_of_large_tables
-    FROM restRest_table r
-    WHERE r.no_of_seats > 6
-    GROUP BY r.room_name;
+SELECT restRoom_management.room_date
+    FROM restRoom_management
+    JOIN restStaff ON restRoom_management.headwaiter = restStaff.staff_no
+    WHERE restStaff.first_name = 'Charles'
+    AND restRoom_management.room_name = 'Green'
+    AND restRoom_management.room_date BETWEEN 160201 AND 160229;
 
 -- 3
 
-SELECT rm.room_name, SUM(b.bill_total) AS total_bills
-    FROM restBill b
-    JOIN restRest_table t ON b.table_no = t.table_no
-    JOIN restRoom_management rm ON t.room_name = rm.room_name
-    GROUP BY rm.room_name;
+SELECT restStaff.first_name, restStaff.surname
+    FROM restStaff
+    WHERE restStaff.headwaiter = (
+    SELECT restStaff.headwaiter
+    FROM restStaff
+    WHERE restStaff.first_name = 'Zoe' AND restStaff.surname = 'Ball');
 
--- 4
+ -- 4
 
- SELECT hs.first_name, hs.surname, SUM(b.bill_total) AS total_bill_amount
-     FROM restStaff hs
-     JOIN restStaff ws ON hs.staff_no = ws.headwaiter
-     JOIN restBill b ON ws.staff_no = b.waiter_no
-     GROUP BY hs.first_name, hs.surname
-     ORDER BY total_bill_amount DESC;
-
+SELECT restBill.cust_name, restBill.bill_total, restStaff.first_name, restStaff.surname
+    FROM restBill
+    JOIN restStaff ON restBill.waiter_no = restStaff.staff_no
+    ORDER BY restBill.bill_total DESC;
+    
 -- 5
 
-SELECT b.cust_name, AVG(b.bill_total) AS average_spent
-    FROM restBill b
-    GROUP BY b.cust_name
-    HAVING AVG(b.bill_total) > 400;
+SELECT restStaff.first_name, restStaff.surname
+    FROM restStaff
+    JOIN restBill ON restStaff.staff_no = restBill.waiter_no = restBill.table_no IN (
+    SELECT restBill.table_no
+    FROM restBill
+    WHERE restBill.bill_no IN (00014, 00017));
 
 -- 6
 
-SELECT s.first_name, s.surname, b.bill_date, COUNT(b.bill_no) AS number_of_bills
-    FROM restBill b
-    JOIN restStaff s ON b.waiter_no = s.staff_no
-    GROUP BY s.first_name, s.surname, b.bill_date
-    HAVING COUNT(b.bill_no) >= 3;
+SELECT restStaff.first_name, restStaff.surname
+    FROM restStaff
+    JOIN restRoom_management ON restStaff.staff_no = restRoom_management.headwaiter
+    WHERE restRoom_management.room_name = 'Blue'
+    AND restRoom_management.room_date = 160312
+    UNION
+    SELECT restStaff.first_name, restStaff.surname
+    FROM restStaff
+    JOIN restBill ON restStaff.staff_no = restBill.waiter_no
+    JOIN restRest_table ON restBill.table_no = restRest_table.table_no
+    WHERE restRest_table.room_name = 'Blue'
+    AND restBill.bill_date = 160312;
